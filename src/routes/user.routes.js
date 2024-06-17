@@ -5,14 +5,13 @@ import { registerUser } from "../controllers/user.controller.js";
 const router = Router()
 
 router.route("/register").post(
-    //always use middle ware before controller
     upload.fields([
         {
             name: "avatar",
             maxCount: 1
         },
         {
-            name: "coverImage",
+            name: "cover",
             maxCount: 1
         }
     ]),
