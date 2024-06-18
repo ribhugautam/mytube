@@ -143,6 +143,8 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
+
+  // Clear refreshToken from the database
   await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -155,16 +157,15 @@ const logoutUser = asyncHandler(async (req, res) => {
     }
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
+  // Clear cookies from the response
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
 
-  return res
-    .status(200)
-    .clearCookies("accessToken", accessToken)
-    .clearCookies("refreshToken", refreshToken)
-    .json(ApiResponse(200, "Logged Out Successfully"));
+  // Respond with a JSON message indicating successful logout
+  return res.status(200).json({
+    status: 200,
+    message: "Logged Out Successfully",
+  });
 });
 
 export { registerUser, loginUser, logoutUser };
