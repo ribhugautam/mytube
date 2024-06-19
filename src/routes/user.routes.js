@@ -11,6 +11,7 @@ import {
   getUserInfo,
   updateAvatarImage,
   updateCoverImage,
+  getUserChannelProfile,
 } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -37,5 +38,6 @@ router
   .route("/update-cover")
   .put(verifyJWT, upload.single("cover"), updateCoverImage);
 router.route("/get-user-info").get(verifyJWT, getUserInfo);
+router.route("/get-channel-profile").get(verifyJWT, getUserChannelProfile);
 
 export default router;
