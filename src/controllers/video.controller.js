@@ -3,8 +3,6 @@ import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Video } from "../models/video.models.js";
 import { uploadImage } from "../utils/cloudinary.js";
-import { User } from "../models/user.model.js";
-import mongoose from "mongoose";
 
 const uploadVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
@@ -26,7 +24,7 @@ const uploadVideo = asyncHandler(async (req, res) => {
 
   const videoFile = await uploadImage(videoLocal);
   const thumbnail = await uploadImage(thumbnailLocal);
-  const ownerId = req.user._id
+  const ownerId = req.user._id;
 
   const duration = videoFile.duration;
 
@@ -48,4 +46,24 @@ const uploadVideo = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, videoData, "File Uploaded Successfully"));
 });
 
-export { uploadVideo };
+const getVideos = asyncHandler(async (req, res) => {
+  const { onlyMyVideos } = req.body;
+
+  let videos;
+
+  if (onlyMyVideos === true) {
+    videos = await Video.find({ owner: req.user._id });
+  } else {
+    videos = await Video.find();
+  }
+
+  if (!videos) {
+    throw new ApiError(500, "No Videos Found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, videos, "Videos fetched successfully"));
+});
+
+export { uploadVideo, getVideos };
