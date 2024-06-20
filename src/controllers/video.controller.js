@@ -26,24 +26,7 @@ const uploadVideo = asyncHandler(async (req, res) => {
 
   const videoFile = await uploadImage(videoLocal);
   const thumbnail = await uploadImage(thumbnailLocal);
-  const owner = await User.aggregate([
-    {
-      $match: {
-        _id: new mongoose.Types.ObjectId(req.user._id),
-      },
-    },
-    {
-      $project: {
-        _id: 1,
-      },
-    },
-  ]);
-
-  if (owner.length === 0) {
-    throw new ApiError(404, "Owner not found");
-  }
-
-  const ownerId = owner[0]._id;
+  const ownerId = req.user._id
 
   const duration = videoFile.duration;
 
