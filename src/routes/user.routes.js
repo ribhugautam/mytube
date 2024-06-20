@@ -15,6 +15,7 @@ import {
   getWatchHistory,
 } from "../controllers/user.controller.js";
 
+
 const router = Router();
 
 //Routes
