@@ -66,4 +66,29 @@ const getVideos = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, videos, "Videos fetched successfully"));
 });
 
-export { uploadVideo, getVideos };
+const searchVideos = asyncHandler(async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    throw new ApiError(400, "Query is Required");
+  }
+
+  const searchQuery = {
+    $or: [
+      { title: new RegExp(query, "i") },
+      { description: new RegExp(query, "i") },
+    ],
+  };
+  const videos = await Video.find(searchQuery).limit(50);
+  if (!videos) {
+    throw new ApiError(500, "No Videos Found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, videos.slice(0, 50), "Videos fetched successfully")
+    );
+});
+
+export { uploadVideo, getVideos, searchVideos };
