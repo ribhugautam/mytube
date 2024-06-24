@@ -51,7 +51,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User already exists");
   }
 
-  const avatarLocalPath = await req.files?.avatar[0]?.path;
+  const avatarLocalPath = await req.files?.avatar?.[0]?.path;
   const coverLocalPath = await req.files?.cover?.[0]?.path;
 
   if (!avatarLocalPath) {
