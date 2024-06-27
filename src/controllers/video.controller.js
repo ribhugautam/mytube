@@ -31,7 +31,11 @@ const uploadVideo = asyncHandler(async (req, res) => {
   const videoData = await Video.create({
     videoFile: videoFile.url,
     thumbnail: thumbnail.url,
-    owner: ownerId,
+    owner: {
+      _id: ownerId,
+      name: req.user.username,
+      avatar: req.user.avatar,
+    },
     title: title,
     description: description,
     duration: duration,
